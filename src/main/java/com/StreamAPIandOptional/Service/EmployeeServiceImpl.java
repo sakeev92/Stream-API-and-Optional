@@ -1,11 +1,15 @@
 package com.StreamAPIandOptional.Service;
 
+import com.StreamAPIandOptional.Expception.InvalidInputException;
 import com.StreamAPIandOptional.Model.Employee;
-import com.StreamAPIandOptional.Expception.EmployeeAlreadyAddedException;
 import com.StreamAPIandOptional.Expception.EmployeeNotFoundException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import static org.apache.commons.lang3.StringUtils.*;
+
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
     private final Map<String, Employee> employees;
@@ -26,6 +30,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee find(String firstName, String lastName) {
+        validateInput(firstName,lastName);
         Employee empl = new Employee(firstName, lastName);
         if (employees.containsKey((empl.getFullName()))) {
             return employees.get((empl.getFullName()));
@@ -35,6 +40,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee add(String firstName, String lastName, int department) {
+        validateInput(firstName,lastName);
         Employee empl = new Employee(firstName, lastName);
         empl.setDepartment(department);
         if (department == 1) {
@@ -48,6 +54,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee remove(String firstName, String lastName) {
+        validateInput(firstName,lastName);
+
         if (employees.containsKey((new Employee(firstName, lastName).getFullName()))) {
             return employees.remove((new Employee(firstName, lastName).getFullName()));
         }
@@ -90,5 +98,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         Collection<Employee> employeesByDepartment = employees.values().stream()
                 .sorted((employee1, employee2) -> employee1.getDepartment() - employee2.getDepartment()).toList();
         return employeesByDepartment;
+    }
+    private void validateInput(String firstName, String lastName){
+    if (!(isAlpha(firstName)&& isAlpha(lastName))){
+        throw new InvalidInputException();
+    }
     }
 }

@@ -1,6 +1,10 @@
 package com.StreamAPIandOptional.Model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Objects;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class Employee {
     final private String firstName;
@@ -9,13 +13,13 @@ public class Employee {
     private double salary;
 
     public Employee(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.firstName = capitalize(firstName.toLowerCase());
+        this.lastName = capitalize(lastName.toLowerCase());
     }
 
     public Employee(String firstName, String lastName, int department) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.firstName = capitalize(firstName.toLowerCase());
+        this.lastName = capitalize(lastName.toLowerCase());
         this.department = department;
         if (department == 1) {
             this.salary = 15000.0;
